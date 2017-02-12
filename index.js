@@ -11,7 +11,7 @@ const WORDS_DIR = process.env.WORDS_DIR || '.';
 const SOURCE_WORDS = path.join('words.txt');
 const SHUFFLED_WORDS = path.join(WORDS_DIR, 'words_shuffled.txt');
 
-const LIVE = (process.env.LIVE || '').trim();
+const LIVE = !!(process.env.LIVE || '').trim();
 const client = LIVE ? new Twit(twitterAuth) : false;
 
 function shiftShuffledWord() {
