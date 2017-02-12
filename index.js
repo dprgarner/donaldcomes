@@ -65,7 +65,7 @@ function waitAndTweet() {
     status = constructTweetText(word);
   }
   return waitUntilDueTime()
-  // .then(() => updateStatus({status}))
+  .then(() => updateStatus({status}))
   .then(() => {
     console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
     return waitFor(1000 * 60);
