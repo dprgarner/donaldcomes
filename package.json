@@ -1,0 +1,15 @@
+{
+  "name": "donaldcomes",
+  "version": "1.0.0",
+  "description": "The Donald COMES",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Garner",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "twit": "^2.2.5"
+  }
+}
