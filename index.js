@@ -8,7 +8,7 @@ const {twitterAuth} = require('./auth');
 const zalgo = require('./zalgo');
 
 const WORDS_DIR = process.env.WORDS_DIR || '.';
-const SOURCE_WORDS = path.join('words.txt');
+const SOURCE_WORDS = 'words.txt';
 const SHUFFLED_WORDS = path.join(WORDS_DIR, 'words_shuffled.txt');
 
 const LIVE = !!(process.env.LIVE || '').trim();
@@ -31,7 +31,7 @@ function shiftShuffledWord() {
 }
 
 function constructTweetText(word) {
-  // If the word is too long, don't try and tweet it.
+  // If the Zalgo'ed tweet is too long, don't try and tweet it.
   for (let i = 0; i < 20; i++) {
     let trialText = zalgo(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
     if (trialText.length <= 140) return trialText;
@@ -57,7 +57,7 @@ function waitUntilDueTime() {
   // Wait until the next hour.
   let tweetInterval = 1000 * 60 * 60;
   let msUntilTime = tweetInterval - (Date.now() % tweetInterval) - 1000 * 15;
-  console.log('Waiting...');
+  console.log('Waiting for next tweet time...');
   return waitFor(LIVE ? msUntilTime : 1000);
 }
 
