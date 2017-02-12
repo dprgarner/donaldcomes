@@ -39,14 +39,18 @@ function updateStatus(params) {
   });
 };
 
-function waitUntilDueTime() {
+function waitFor(msUntilTime) {
   return new Promise((resolve, reject) => {
-    // Wait until the next hour.
-    let tweetInterval = 1000 * 60 * 60;
-    let msUntilTime = tweetInterval - (Date.now() % tweetInterval);
-    console.log('Waiting...');
     setTimeout(resolve, msUntilTime);
   });
+}
+
+function waitUntilDueTime() {
+  // Wait until the next hour.
+  let tweetInterval = 1000 * 60 * 60;
+  let msUntilTime = tweetInterval - (Date.now() % tweetInterval) - 1000 * 15;
+  console.log('Waiting...');
+  return waitFor(msUntilTime);
 }
 
 function waitAndTweet() {
@@ -56,11 +60,12 @@ function waitAndTweet() {
     status = constructTweetText(word);
   }
   return waitUntilDueTime()
-  .then(() => updateStatus({status}))
+  // .then(() => updateStatus({status}))
   .then(() => {
     console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
-    return waitAndTweet();
+    return waitFor(1000 * 60);
   })
+  .then(() => waitAndTweet())
   .catch(err => {
     console.error(err);
     process.exit(1);
