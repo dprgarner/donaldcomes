@@ -12,7 +12,12 @@ const SHUFFLED_WORDS = 'words_shuffled.txt';
 const client = new Twit(twitterAuth);
 
 function shiftShuffledWord() {
-  let wordsString = fs.readFileSync(SHUFFLED_WORDS, 'utf8');
+  let wordsString;
+  if (!fs.existsSync(SHUFFLED_WORDS)) {
+    wordsString = '';
+  } else {
+    wordsString = fs.readFileSync(SHUFFLED_WORDS, 'utf8');
+  }
   let words = wordsString.split('\n');
   if (!wordsString) {
     words = _.shuffle(fs.readFileSync(SOURCE_WORDS, 'utf8').split('\n'));
