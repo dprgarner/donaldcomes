@@ -34,7 +34,6 @@ function updateStatus(params) {
   return new Promise((resolve, reject) => {
     client.post('statuses/update', params, function (err, data, response) {
       if (err) return reject(err);
-      console.log('Updated status');
       resolve(data);
     });
   });
@@ -43,20 +42,25 @@ function updateStatus(params) {
 function waitUntilDueTime() {
   return new Promise((resolve, reject) => {
     // Wait until the next hour.
-    let tweetInterval = 100;// 1000 * 60 * 60;
+    let tweetInterval = 1000 * 60 * 60;
     let msUntilTime = tweetInterval - (Date.now() % tweetInterval);
+    console.log('Waiting...');
     setTimeout(resolve, msUntilTime);
   });
 }
 
 function waitAndTweet() {
-  let status;
+  let status, word;
   while (!status) {
-    status = constructTweetText(shiftShuffledWord()); 
+    word = shiftShuffledWord();
+    status = constructTweetText(word);
   }
   return waitUntilDueTime()
   .then(() => updateStatus({status}))
-  .then(() => waitAndTweet())
+  .then(() => {
+    console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
+    return waitAndTweet();
+  })
   .catch(err => {
     console.error(err);
     process.exit(1);
