@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const _ = require('lodash');
 const Twit = require('twit');
@@ -6,10 +7,12 @@ const Twit = require('twit');
 const {twitterAuth} = require('./auth');
 const zalgo = require('./zalgo');
 
+const WORDS_DIR = process.env.WORDS_DIR || '.';
 const SOURCE_WORDS = 'words.txt';
-const SHUFFLED_WORDS = 'words_shuffled.txt';
+const SHUFFLED_WORDS = path.join(WORDS_DIR, 'words_shuffled.txt');
 
-const client = new Twit(twitterAuth);
+const LIVE = !!(process.env.LIVE || '').trim();
+const client = LIVE ? new Twit(twitterAuth) : false;
 
 function shiftShuffledWord() {
   let wordsString;
@@ -28,7 +31,7 @@ function shiftShuffledWord() {
 }
 
 function constructTweetText(word) {
-  // If the word is too long, don't try and tweet it.
+  // If the Zalgo'ed tweet is too long, don't try and tweet it.
   for (let i = 0; i < 20; i++) {
     let trialText = zalgo(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
     if (trialText.length <= 140) return trialText;
@@ -54,8 +57,8 @@ function waitUntilDueTime() {
   // Wait until the next hour.
   let tweetInterval = 1000 * 60 * 60;
   let msUntilTime = tweetInterval - (Date.now() % tweetInterval) - 1000 * 15;
-  console.log('Waiting...');
-  return waitFor(msUntilTime);
+  console.log('Waiting for next tweet time...');
+  return waitFor(LIVE ? msUntilTime : 1000);
 }
 
 function waitAndTweet() {
@@ -65,10 +68,10 @@ function waitAndTweet() {
     status = constructTweetText(word);
   }
   return waitUntilDueTime()
-  .then(() => updateStatus({status}))
+  .then(() => (LIVE ? updateStatus({status}) : true))
   .then(() => {
     console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
-    return waitFor(1000 * 60);
+    return waitFor(LIVE ? 1000 * 60 : 0);
   })
   .then(() => waitAndTweet());
 }
