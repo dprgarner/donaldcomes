@@ -70,11 +70,11 @@ function waitAndTweet() {
     console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
     return waitFor(1000 * 60);
   })
-  .then(() => waitAndTweet())
-  .catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
+  .then(() => waitAndTweet());
 }
 
-waitAndTweet();
+waitAndTweet()
+.catch(err => {
+  console.error(err);
+  process.exit(1);
+});
