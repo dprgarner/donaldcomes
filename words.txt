@@ -13,7 +13,8 @@ angst
 appease
 arid
 ashen
-awe
+aweful
+awful
 barbaric
 barbarous
 barren
@@ -72,6 +73,7 @@ evil
 falter
 fawn
 fear
+fearful
 fervid
 fold
 forlorn
