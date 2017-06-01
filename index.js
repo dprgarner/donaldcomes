@@ -63,6 +63,14 @@ function waitUntilDueTime() {
 
 function waitAndTweet() {
   let status, word;
+
+  // Probably only topical for a couple of weeks
+  const covfefeTime = 1496120760000;
+  const daysAfterCovfefe = ((new Date() - covfefeTime) / (1000 * 60 * 60 * 24));
+  if (Math.random() > daysAfterCovfefe / 14 && Math.random() > 0.5) {
+    word = 'covfefe';
+    status = constructTweetText('covfefe');
+  }
   while (!status) {
     word = shiftShuffledWord();
     status = constructTweetText(word);
