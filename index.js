@@ -4,7 +4,6 @@ const path = require('path');
 const _ = require('lodash');
 const Twit = require('twit');
 
-const {twitterAuth} = require('./auth');
 const zalgo = require('./zalgo');
 
 const WORDS_DIR = process.env.WORDS_DIR || '.';
@@ -12,7 +11,14 @@ const SOURCE_WORDS = 'words.txt';
 const SHUFFLED_WORDS = path.join(WORDS_DIR, 'words_shuffled.txt');
 
 const LIVE = !!(process.env.LIVE || '').trim();
-const client = LIVE ? new Twit(twitterAuth) : false;
+const client =
+  LIVE &&
+  new Twit({
+    consumer_key: process.env.CONSUMER_KEY,
+    consumer_secret: process.env.CONSUMER_SECRET,
+    access_token: process.env.ACCESS_TOKEN,
+    access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+  });
 
 function shiftShuffledWord() {
   let wordsString;
@@ -39,13 +45,15 @@ function constructTweetText(word) {
 }
 
 function updateStatus(params) {
+  if (!LIVE) return;
+
   return new Promise((resolve, reject) => {
-    client.post('statuses/update', params, function (err, data, response) {
+    client.post('statuses/update', params, function(err, data, response) {
       if (err) return reject(err);
       resolve(data);
     });
   });
-};
+}
 
 function waitFor(msUntilTime) {
   return new Promise((resolve, reject) => {
@@ -58,7 +66,7 @@ function waitUntilDueTime() {
   let tweetInterval = 1000 * 60 * 60;
   let msUntilTime = tweetInterval - (Date.now() % tweetInterval) - 1000 * 15;
   console.log('Waiting for next tweet time...');
-  return waitFor(LIVE ? msUntilTime : 1000);
+  return waitFor(LIVE ? msUntilTime : 5000);
 }
 
 function waitAndTweet() {
@@ -66,7 +74,7 @@ function waitAndTweet() {
 
   // Probably only topical for a couple of weeks
   const covfefeTime = 1496120760000;
-  const daysAfterCovfefe = ((new Date() - covfefeTime) / (1000 * 60 * 60 * 24));
+  const daysAfterCovfefe = (new Date() - covfefeTime) / (1000 * 60 * 60 * 24);
   if (Math.random() > daysAfterCovfefe / 14 && Math.random() > 0.5) {
     word = 'covfefe';
     status = constructTweetText('covfefe');
@@ -76,16 +84,15 @@ function waitAndTweet() {
     status = constructTweetText(word);
   }
   return waitUntilDueTime()
-  .then(() => (LIVE ? updateStatus({status}) : true))
-  .then(() => {
-    console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
-    return waitFor(LIVE ? 1000 * 60 : 0);
-  })
-  .then(() => waitAndTweet());
+    .then(() => updateStatus({ status }))
+    .then(() => {
+      console.log(`MAKE AMERICA ${word.toUpperCase()} AGAIN`);
+      return waitFor(LIVE ? 1000 * 60 : 0);
+    })
+    .then(() => waitAndTweet());
 }
 
-waitAndTweet()
-.catch(err => {
+waitAndTweet().catch(err => {
   console.error(err);
   process.exit(1);
 });

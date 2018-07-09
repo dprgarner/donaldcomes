@@ -4,7 +4,7 @@
   "description": "The Donald COMES",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node -r dotenv/config index.js"
   },
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
   "author": "David Garner",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^6.0.0",
     "lodash": "^4.17.4",
     "twit": "^2.2.5"
   }

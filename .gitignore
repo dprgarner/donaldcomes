@@ -1,3 +1,4 @@
-auth.js
+.env
+.secret
 node_modules
 words_shuffled.txt
