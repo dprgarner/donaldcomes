@@ -6,7 +6,17 @@ const Twit = require('twit');
 
 const zalgo = require('./zalgo');
 
-const WORDS_DIR = process.env.WORDS_DIR || '.';
+const WORDS_DIR = process.env.WORDS_DIR;
+
+if (!WORDS_DIR) {
+  console.error('WORDS_DIR not specified');
+  process.exit(1);
+}
+
+if (!fs.existsSync(WORDS_DIR)) {
+  fs.mkdirSync(WORDS_DIR);
+}
+
 const SOURCE_WORDS = 'words.txt';
 const SHUFFLED_WORDS = path.join(WORDS_DIR, 'words_shuffled.txt');
 
@@ -96,3 +106,5 @@ waitAndTweet().catch(err => {
   console.error(err);
   process.exit(1);
 });
+
+console.log('Bot started.');

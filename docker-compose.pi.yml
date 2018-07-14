@@ -1,0 +1,9 @@
+version: "3.6"
+
+services:
+  bot:
+    build:
+      args:
+        base_image: arm32v7/node:10.6.0-slim
+    environment:
+      LIVE: '1'

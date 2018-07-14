@@ -1,4 +1,5 @@
 .env
 .secret
+data
 node_modules
 words_shuffled.txt

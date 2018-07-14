@@ -1,9 +1,11 @@
-FROM node:latest
+ARG base_image
+
+FROM ${base_image}
 
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./package.json /app/package.json
+COPY package.json yarn.lock /app/
 RUN yarn
 COPY . /app/
 
