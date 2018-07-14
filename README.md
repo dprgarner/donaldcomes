@@ -6,9 +6,9 @@ Lives at: https://twitter.com/TheDonaldComes
 
 Collaboration with [@Bekkhilde](https://twitter.com/bekkhilde).
 
-## Running locally
+## Running locally with Docker
 
-First, unset any docker-machine variables with:
+If using docker-machine, unset any docker-machine variables with:
 
 ```bash
 eval $(docker-machine env -u)
@@ -22,12 +22,12 @@ docker-compose up
 
 To actually make the bot tweet, first create a `.env` file with the creditials for a Twitter app, stored in the variables `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET`. Also, set the env variable `LIVE` to any value.
 
-## Running on a Raspberry Pi
+## Running on a Raspberry Pi with Docker
 
-Set up a Raspberry Pi env with docker-machine. Set the env variables with:
+[Set up a Raspberry Pi env with docker-machine](https://gist.github.com/calebbrewer/c41cab61216d8845b59fcc51f36343a7). Set the env variables with:
 
 ```bash
-eval $(docker-machine env rpi)
+eval $(docker-machine env <MACHINE_NAME>)
 ```
 
 Next, build and run the container with:
