@@ -7,3 +7,4 @@ services:
         base_image: arm32v7/node:10.6.0-slim
     environment:
       LIVE: '1'
+    restart: on-failure
